@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TinTucOnLine 4.0</string>
+    <string name="facebook_app_id">485837115176956</string>
+    <string name="fb_login_protocol_scheme">fb485837115176956</string>
 </resources>
