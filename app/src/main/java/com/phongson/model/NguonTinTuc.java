@@ -1,7 +1,7 @@
 package com.phongson.model;
 
 public class NguonTinTuc {
-    private String idNguon , tenNguon , idChuyenMuc;
+    private String idNguon , tenNguon;
 
     public String getIdNguon() {
         return idNguon;
@@ -19,20 +19,13 @@ public class NguonTinTuc {
         this.tenNguon = tenNguon;
     }
 
-    public String getIdChuyenMuc() {
-        return idChuyenMuc;
-    }
 
-    public void setIdChuyenMuc(String idChuyenMuc) {
-        this.idChuyenMuc = idChuyenMuc;
-    }
 
     public NguonTinTuc() {
     }
 
-    public NguonTinTuc(String idNguon, String tenNguon, String idChuyenMuc) {
+    public NguonTinTuc(String idNguon, String tenNguon) {
         this.idNguon = idNguon;
         this.tenNguon = tenNguon;
-        this.idChuyenMuc = idChuyenMuc;
     }
 }

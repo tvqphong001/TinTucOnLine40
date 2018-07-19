@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.AdminAtivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chuyen Muc" />
+
+    <EditText
+        android:id="@+id/idChuyenmuc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/TenChuyenmuc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnThemChuyenMuc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="them" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nguon" />
+
+    <EditText
+        android:id="@+id/idNguon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/TenNguon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnNguon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="them" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Link" />
+    <EditText
+        android:id="@+id/idLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/TenLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="them" />
+
+    <Button
+        android:id="@+id/btnCapNhatTinTuc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cap Nhat TIn Tuc" />
+</LinearLayout>
