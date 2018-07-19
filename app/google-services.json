@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "280429726367",
+    "firebase_url": "https://tintuconline-40.firebaseio.com",
+    "project_id": "tintuconline-40",
+    "storage_bucket": "tintuconline-40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280429726367:android:5f718360c1ccce07",
+        "android_client_info": {
+          "package_name": "com.phongson"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280429726367-nd298mun927l2ej1it3ql4ea7os6plm7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.phongson",
+            "certificate_hash": "3e15d21e9617c024055a1867e4eb930ed5a804b4"
+          }
+        },
+        {
+          "client_id": "280429726367-7v9l5cbb0etgab7nggh5kopanpgoi9d5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGrC7uIXivzKcJr5y4Mnw7b5vYs195jWM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280429726367-7v9l5cbb0etgab7nggh5kopanpgoi9d5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
