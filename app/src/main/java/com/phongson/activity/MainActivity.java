@@ -1,25 +1,14 @@
-package com.phongson;
+package com.phongson.activity;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.phongson.activity.AdminAtivity;
-import com.phongson.model.DocGanDay;
-import com.phongson.model.TinDaLuu;
-import com.phongson.model.User;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.phongson.R;
 
 public class MainActivity extends AppCompatActivity {
 
