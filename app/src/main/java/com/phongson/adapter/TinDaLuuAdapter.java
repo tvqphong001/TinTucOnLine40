@@ -34,6 +34,15 @@ public class TinDaLuuAdapter extends ArrayAdapter<TinDaLuu> {
         view = inflater.inflate(R.layout.item_lichsudoc,null);
         TextView textView = view.findViewById(R.id.txtTieuDe);
 
+        Button btnXoa = view.findViewById(R.id.btnXoa);
+        btnXoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                objects.remove(position);
+                MainActivity.mDatabase.child("TinTuc").child(objects.get(position).getIdTin()).removeValue();
+            }
+        });
+
 
         TinDaLuu tinDaLuu = objects.get(position);
         textView.setText(tinDaLuu.getTieuDe());
