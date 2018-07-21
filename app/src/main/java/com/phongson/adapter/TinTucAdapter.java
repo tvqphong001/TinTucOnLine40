@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.phongson.R;
+import com.phongson.activity.MainActivity;
 import com.phongson.model.TinTuc;
 import com.squareup.picasso.Picasso;
 
@@ -31,7 +33,7 @@ public class TinTucAdapter extends ArrayAdapter<TinTuc> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view;
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -42,6 +44,7 @@ public class TinTucAdapter extends ArrayAdapter<TinTuc> {
         ImageView imageView = view.findViewById(R.id.imview);
         TextView NguonBao = view.findViewById(R.id.txtNguonTin);
         TextView NgayDang = view.findViewById(R.id.txtNgayDang);
+
 
         if(tinTuc!=null) {
             textView.setText(tinTuc.getTieuDe());

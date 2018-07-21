@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.phongson.R;
 import com.phongson.model.TinDaLuu;
 
+import java.util.ArrayList;
+
 
 public class TinActivity extends AppCompatActivity {
     WebView webView;
@@ -74,6 +76,19 @@ public class TinActivity extends AppCompatActivity {
         }
     };
 
+    private void XoaTin(String url)
+    {
+        ArrayList<TinDaLuu> listTinDaLuu =MainActivity.listTinDaLuu;
+        for (int i =0;i<listTinDaLuu.size();i++)
+        {
+            if (url.equals(listTinDaLuu.get(i).getLinkTinTuc()))
+            {
+               listTinDaLuu.remove(i);
+               mDatabase.child("TinDaLuu").child(MainActivity.listTinDaLuu.remove(i).getIdTin()).removeValue();
+               return;
+            }
+        }
+    }
     private boolean kiemTraTrung(String url) {
         for (int i =0;i<MainActivity.listTinDaLuu.size();i++)
         {

@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.phongson.R;
+import com.phongson.activity.MainActivity;
 import com.phongson.model.TinDaLuu;
 
 import java.util.List;
@@ -28,12 +30,20 @@ public class TinDaLuuAdapter extends ArrayAdapter<TinDaLuu> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view;
         LayoutInflater inflater = LayoutInflater.from(getContext());
         view = inflater.inflate(R.layout.item_lichsudoc,null);
         TextView textView = view.findViewById(R.id.txtTieuDe);
 
+        Button btnXoa = view.findViewById(R.id.btnXoa);
+        btnXoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                objects.remove(position);
+                MainActivity.mDatabase.child("TinTuc").child(objects.get(position).getIdTin()).removeValue();
+            }
+        });
 
         TinDaLuu tinDaLuu = objects.get(position);
         textView.setText(tinDaLuu.getTieuDe());
