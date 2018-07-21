@@ -44,6 +44,8 @@ public class TinDaLuuAdapter extends ArrayAdapter<TinDaLuu> {
                 MainActivity.mDatabase.child("TinTuc").child(objects.get(position).getIdTin()).removeValue();
             }
         });
+        
+        abc;
 
         TinDaLuu tinDaLuu = objects.get(position);
         textView.setText(tinDaLuu.getTieuDe());
