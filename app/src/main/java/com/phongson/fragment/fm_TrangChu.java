@@ -17,6 +17,11 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.phongson.R;
+import com.phongson.activity.Main2Activity;
+import com.phongson.activity.MainActivity;
+import com.phongson.activity.TinActivity;
+import com.phongson.adapter.TinTucAdapter;
+import com.phongson.model.TinTuc;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,9 +37,9 @@ import java.util.regex.Pattern;
 
 
 public class fm_TrangChu extends Fragment {
-    //    ArrayList<TinTuc> list;
-//    ListView listView;
-//    TinTucAdapter adapter;
+    ArrayList<TinTuc> list;
+    ListView listView;
+    TinTucAdapter adapter;
 //    ArrayList<TheLoai> listTheLoai;
     @Nullable
     @Override
@@ -47,11 +52,10 @@ public class fm_TrangChu extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        list = new ArrayList<>();
-//        listTheLoai = new ArrayList<>();
-//        listView = view.findViewById(R.id.listview);
+        list = new ArrayList<>();
+        listView = view.findViewById(R.id.listview);
 //        // lay du lieu tu firebase ve
-//        getdataTheloai();
+        getdataTheloai();
 //
 //        // chờ fire 3000ms= 3s để listTheLoai lay về nếu không sẽ null
 //        new Handler().postDelayed(new Runnable() {
@@ -63,16 +67,16 @@ public class fm_TrangChu extends Fragment {
 //        },1000);
 //
 //        // Chon moi item trong list view sẽ lấy đường link tương ứng
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(getActivity(), TinActivity.class);
-//                // lấy đối tượng TinTuc trong list ngay position(Vị Trí) mà mình nhấn vào
-//                intent.putExtra("link",list.get(position).getLink());
-//                intent.putExtra("ID_USER",MainActivity.ID_USER);
-//                startActivity(intent);
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), TinActivity.class);
+                // lấy đối tượng TinTuc trong list ngay position(Vị Trí) mà mình nhấn vào
+                intent.putExtra("link",list.get(position).getLinkTinTuc());
+                intent.putExtra("ID_USER", Main2Activity.ID_USER);
+                startActivity(intent);
+            }
+        });
 //    }
 //
 //    private void getdataTheloai() {
@@ -393,5 +397,37 @@ public class fm_TrangChu extends Fragment {
 //
 //        }
 //    }
+    }
+
+    private void getdataTheloai() {
+        MainActivity.mDatabase.child("TinTuc").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                TinTuc tinTuc = dataSnapshot.getValue(TinTuc.class);
+                list.add(tinTuc);
+                adapter = new TinTucAdapter(getActivity(),R.layout.item_list_tintucc,list);
+                listView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

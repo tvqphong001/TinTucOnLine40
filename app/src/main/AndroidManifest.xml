@@ -15,7 +15,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,10 +24,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AdminAtivity" />
+
         <activity
             android:name=".activity.Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".activity.ChonChuyenMucActivity" />
+        <activity android:name=".activity.TinActivity" />
+        <activity android:name=".activity.LichSuDocActivity"></activity>
     </application>
 
 </manifest>

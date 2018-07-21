@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_Save"
+        android:icon="@drawable/ic_drop_down_24dp"
+        android:title="Luu tin " />
+
+    <item
+        android:id="@+id/navigation_Comments"
+        android:icon="@drawable/ic_menu_send"
+        android:title="Binh Luan" />
+
+    <item
+        android:id="@+id/navigation_Share"
+        android:icon="@drawable/ic_menu_share"
+        android:title="Chia se" />
+
+</menu>

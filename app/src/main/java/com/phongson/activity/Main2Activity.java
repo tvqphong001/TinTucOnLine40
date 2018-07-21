@@ -1,8 +1,14 @@
 package com.phongson.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,12 +18,48 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.phongson.R;
+import com.phongson.adapter.VP_MainAdapter;
+import com.phongson.model.ChuyenMuc;
+import com.phongson.model.User;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    LoginButton btnLoginButton;
+    ImageView imvUser;
+    TextView txtUser;
+    public static String ID_USER = "";
+    CallbackManager callbackManager = CallbackManager.Factory.create();
+    public static ArrayList<ChuyenMuc> listChuyenMuc;
+    public static ArrayList<ChuyenMuc> listChuyenMucChon;
+    public static int TrangThaiGetChuyenMuc;
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +84,135 @@ public class Main2Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        setDataUser(navigationView.getHeaderView(0));
+
+        listChuyenMuc = MainActivity.listChuyenMuc;
+
+        Intent intent = getIntent();
+        int Thaydoi = intent.getIntExtra("ThayDoi", -1);
+        if (Thaydoi == 1) {
+            listChuyenMuc = ChonChuyenMucActivity.listChonChuyenMuc;
+        } else {
+            getDataChuyenMuc();
+        }
+        setViewPager();
+
     }
 
+    private void setDataUser(View hview) {
+        btnLoginButton = hview.findViewById(R.id.btnLoginFb);
+        imvUser = hview.findViewById(R.id.imvUser);
+        txtUser = hview.findViewById(R.id.txtUser);
+        if (AccessToken.getCurrentAccessToken() != null) {
+            GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(JSONObject object, GraphResponse response) {
+                    //Log.d("Json", response.getJSONObject().toString());
+                    User user = null;
+                    try {
+                        String name = object.getString("name");
+                        String id = object.getString("id");
+                        String profilePicUrl = "https://graph.facebook.com/" + id + "/picture?type=large";
+                        Picasso.get().load(profilePicUrl).into(imvUser);
+                        txtUser.setText(name);
+                        ID_USER = id;
+                        //ID_USER = Integer.parseInt(id);
+                        //user = new User(id,name,email);
+                        //mDatabase.child("User").push().setValue(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "name,id,email");
+            request.setParameters(parameters);
+            request.executeAsync();
+            btnLoginButton.setVisibility(View.INVISIBLE);
+        }
+        btnLoginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday"));
+        btnLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        //Log.d("Json", response.getJSONObject().toString());
+                        //User user = null;
+                        try {
+                            String name = object.getString("name");
+                            String id = object.getString("id");
+                            //String email = object.getString("email");
+                            String profilePicUrl = "https://graph.facebook.com/" + id + "/picture?type=large";
+                            Picasso.get().load(profilePicUrl).into(imvUser);
+                            txtUser.setText(name);
+                            ID_USER = id;
+                            //ID_USER = Integer.parseInt(id);
+                            //user = new User(id,name,email);
+                            //mDatabase.child("User").push().setValue(user);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "name,id,email");
+                request.setParameters(parameters);
+                request.executeAsync();
+                btnLoginButton.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    private void getDataChuyenMuc() {
+        listChuyenMuc = MainActivity.listChuyenMuc;
+    }
+
+    private void setViewPager() {
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+
+//        viewPager.setAdapter(new VP_MainAdapter(getSupportFragmentManager(),getApplicationContext()) );
+
+        viewPager.setAdapter(new VP_MainAdapter(getSupportFragmentManager(), getApplicationContext()));
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+        });
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -82,20 +251,33 @@ public class Main2Activity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_Home) {
+            setViewPager();
         }
+        if (id == R.id.nav_thongtincanhan) {
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.content_frame
+//                            , new fm_ChiTietThongTin())
+//                    .commit();
 
+            //startActivity(new Intent(MainActivity2.this, ThongTinCaNhanActivity.class));
+        }
+        if (id == R.id.nav_chonchuyenmuc) {
+            startActivity(new Intent(Main2Activity.this, ChonChuyenMucActivity.class));
+        }
+        if (id == R.id.nav_setting) {
+            // startActivity(new Intent(MainActivity2.this, SettingsActivity2.class));
+        }
+        if (id == R.id.nav_history_new_save) {
+            startActivity(new Intent(Main2Activity.this, LichSuDocActivity.class));
+        }
+        if (id == R.id.nav_logout) {
+            LoginManager.getInstance().logOut();
+            btnLoginButton.setVisibility(View.VISIBLE);
+            imvUser.setImageResource(R.drawable.guest);
+            txtUser.setText("Khách");
+            // đăng xuất fb
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
