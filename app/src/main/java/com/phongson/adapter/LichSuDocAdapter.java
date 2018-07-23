@@ -17,11 +17,11 @@ import com.phongson.model.TinDaLuu;
 
 import java.util.List;
 
-public class TinDaLuuAdapter extends ArrayAdapter<TinDaLuu> {
+public class LichSuDocAdapter extends ArrayAdapter<TinDaLuu> {
     Activity context;
     int resource;
     List<TinDaLuu> objects;
-    public TinDaLuuAdapter(@NonNull Activity context, int resource, @NonNull List<TinDaLuu> objects) {
+    public LichSuDocAdapter(@NonNull Activity context, int resource, @NonNull List<TinDaLuu> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
@@ -40,12 +40,11 @@ public class TinDaLuuAdapter extends ArrayAdapter<TinDaLuu> {
         btnXoa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                objects.remove(position);
-                MainActivity.mDatabase.child("TinTuc").child(objects.get(position).getIdTin()).removeValue();
+//                MainActivity.listTinDaLuu.remove(position);
+//                MainActivity.mDatabase.child("TinTuc").child(objects.get(position).getIdTin()).removeValue();
+//                objects.remove(position);
             }
         });
-        
-        abc;
 
         TinDaLuu tinDaLuu = objects.get(position);
         textView.setText(tinDaLuu.getTieuDe());

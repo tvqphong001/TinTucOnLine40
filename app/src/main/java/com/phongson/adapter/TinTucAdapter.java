@@ -48,8 +48,11 @@ public class TinTucAdapter extends ArrayAdapter<TinTuc> {
 
         if(tinTuc!=null) {
             textView.setText(tinTuc.getTieuDe());
-            if (tinTuc.getLinkHinhAnh()!="")
+            if (tinTuc.getLinkHinhAnh().equals(""))
             {
+
+            }
+            else {
                 Picasso.get().load(tinTuc.getLinkHinhAnh()).into(imageView);
             }
 

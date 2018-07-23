@@ -28,6 +28,11 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/com_facebook_button_login_logo"
             android:title="Đăng xuất" />
+        <item android:id="@+id/nav_admin"
+            android:title="Amin"
+            android:icon="@drawable/ic_mic_24dp">
+
+        </item>
     </group>
 
 </menu>

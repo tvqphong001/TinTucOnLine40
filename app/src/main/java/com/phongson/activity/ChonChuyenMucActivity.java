@@ -14,7 +14,6 @@ import com.phongson.adapter.ChonChuyenMucAdapter;
 import com.phongson.model.ChuyenMuc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class ChonChuyenMucActivity extends AppCompatActivity {
@@ -25,7 +24,7 @@ public class ChonChuyenMucActivity extends AppCompatActivity {
     public static ArrayList<Integer> ViTri = new ArrayList<>();
     ListView listView;
     ChonChuyenMucAdapter adapter;
-    ChuyenMuc chuyenMuc;
+    public static ChuyenMuc TrangChu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,13 +88,23 @@ public class ChonChuyenMucActivity extends AppCompatActivity {
         listChuyenMuc = new ArrayList<>();
         listChonChuyenMuc = new ArrayList<>();
         listChonChuyenMuc.add(getTrangChu());
-        listChuyenMuc = MainActivity.listChuyenMuc;
+        setListChuyenMuc();
         listChuyenMuc.remove(getViTriTrangChu());
         listView = findViewById(R.id.listview);
         btnThayDoi = findViewById(R.id.btnThayDoi);
         adapter = new ChonChuyenMucAdapter(this,R.layout.item_chuyenmuc,listChuyenMuc);
         listView.setAdapter(adapter);
     }
+
+    private void setListChuyenMuc() {
+        for (int i = 0;i<MainActivity.listChuyenMuc.size();i++)
+        {
+            ChuyenMuc chuyenMuc;
+            chuyenMuc = MainActivity.listChuyenMuc.get(i);
+            listChuyenMuc.add(chuyenMuc);
+        }
+    }
+
     private void xoaChiTiet(ChuyenMuc chuyenMuc) {
         String machuyenmuc = chuyenMuc.getIdChuyenMuc();
         for (int i = listChonChuyenMuc.size()-1;i>=0;i--)

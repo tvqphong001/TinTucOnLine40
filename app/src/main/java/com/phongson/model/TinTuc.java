@@ -3,6 +3,23 @@ package com.phongson.model;
 import java.util.Date;
 
 public class TinTuc {
+    public TinTuc(String idTin, String linkTinTuc, String linkHinhAnh, String tieuDe, Date ngayDang) {
+        this.idTin = idTin;
+        this.linkTinTuc = linkTinTuc;
+        this.linkHinhAnh = linkHinhAnh;
+        TieuDe = tieuDe;
+        this.ngayDang = ngayDang;
+    }
+
+    public TinTuc(String idTin, String linkTinTuc, String linkHinhAnh, String tieuDe, String idLink, Date ngayDang) {
+        this.idTin = idTin;
+        this.linkTinTuc = linkTinTuc;
+        this.linkHinhAnh = linkHinhAnh;
+        TieuDe = tieuDe;
+        this.idLink = idLink;
+        this.ngayDang = ngayDang;
+    }
+
     private String idTin , linkTinTuc , linkHinhAnh , TieuDe , luotBinhLuan , luotXem ,idLink ;
     private Date ngayDang ;
 

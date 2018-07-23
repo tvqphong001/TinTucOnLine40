@@ -1,108 +1,53 @@
 package com.phongson.activity;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ListView;
-
-import com.facebook.AccessToken;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.phongson.R;
-import com.phongson.adapter.TinDaLuuAdapter;
-import com.phongson.model.TinDaLuu;
-
-import java.util.ArrayList;
+import com.phongson.adapter.VP_LichSuDoc;
 
 public class LichSuDocActivity extends AppCompatActivity {
-
-    ArrayList<TinDaLuu> ListTinDaLuu;
-    ListView lvLichSuDoc;
-    TinDaLuuAdapter adapter;
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    public static String ID_USER;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lich_su_doc);
-        addControls();
-        addEvents();
-        getDaTaLichSu();
 
+        Intent intent1 = getIntent();
+        ID_USER=intent1.getStringExtra("ID_USER");
 
+        setViewPager();
 
     }
+    private void setViewPager() {
+        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
 
-    private void addEvents() {
-        lvLichSuDoc.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        viewPager.setAdapter(new VP_LichSuDoc(getSupportFragmentManager(), getApplicationContext()));
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-                ListTinDaLuu.remove(position);
-                MainActivity.mDatabase.child("TinDaLuu").child(ListTinDaLuu.get(position).getIdTin()).removeValue();
-                adapter = new TinDaLuuAdapter(LichSuDocActivity.this,R.layout.item_lichsudoc,ListTinDaLuu);
-                lvLichSuDoc.setAdapter(adapter);
-                return false;
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
             }
         });
-    }
 
-    private void getDaTaLichSu() {
 
-        if (AccessToken.getCurrentAccessToken() != null) {
-            MainActivity.mDatabase.child("TinDaLuu").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    TinDaLuu tinDaLuu = dataSnapshot.getValue(TinDaLuu.class);
-                    ListTinDaLuu.add(tinDaLuu);
-                    adapter = new TinDaLuuAdapter(LichSuDocActivity.this,R.layout.item_lichsudoc,ListTinDaLuu);
-                    lvLichSuDoc.setAdapter(adapter);
 
-                }
 
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                    TinDaLuu tinDaLuu = dataSnapshot.getValue(TinDaLuu.class);
-                    if (tim(tinDaLuu.getIdTin())!=-1)
-                    {
-                        int vitri = tim(tinDaLuu.getIdTin());
-                        ListTinDaLuu.remove(vitri);
-                    }
-                    adapter = new TinDaLuuAdapter(LichSuDocActivity.this,R.layout.item_lichsudoc,ListTinDaLuu);
-                    lvLichSuDoc.setAdapter(adapter);
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
-
-    private void addControls() {
-        ListTinDaLuu = new ArrayList<>();
-        lvLichSuDoc = findViewById(R.id.lvLichSuDoc);
-    }
-    private int tim(String id){
-        for (int i=0;i<ListTinDaLuu.size();i++)
-        {
-            if (id.equals(ListTinDaLuu.get(i).getIdTin()))
-                return i;
-        }
-        return -1;
-    }
+}
 }

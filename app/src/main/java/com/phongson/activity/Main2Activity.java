@@ -38,6 +38,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.phongson.R;
 import com.phongson.adapter.VP_MainAdapter;
 import com.phongson.model.ChuyenMuc;
+import com.phongson.model.DocGanDay;
+import com.phongson.model.TinDaLuu;
 import com.phongson.model.User;
 import com.squareup.picasso.Picasso;
 
@@ -57,13 +59,16 @@ public class Main2Activity extends AppCompatActivity
     public static String ID_USER = "";
     CallbackManager callbackManager = CallbackManager.Factory.create();
     public static ArrayList<ChuyenMuc> listChuyenMuc;
-    public static ArrayList<ChuyenMuc> listChuyenMucChon;
-    public static int TrangThaiGetChuyenMuc;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+    //Lich Su doc
+    public static ArrayList<TinDaLuu> listTinDaLuu;
+    public static ArrayList<DocGanDay> listDocGanDay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        addConTrol();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -101,6 +106,11 @@ public class Main2Activity extends AppCompatActivity
 
     }
 
+    private void addConTrol() {
+        listDocGanDay = new ArrayList<>();
+        listTinDaLuu = new ArrayList<>();
+    }
+
     private void setDataUser(View hview) {
         btnLoginButton = hview.findViewById(R.id.btnLoginFb);
         imvUser = hview.findViewById(R.id.imvUser);
@@ -118,6 +128,7 @@ public class Main2Activity extends AppCompatActivity
                         Picasso.get().load(profilePicUrl).into(imvUser);
                         txtUser.setText(name);
                         ID_USER = id;
+                        getLichSuDoc(ID_USER);
                         //ID_USER = Integer.parseInt(id);
                         //user = new User(id,name,email);
                         //mDatabase.child("User").push().setValue(user);
@@ -132,11 +143,13 @@ public class Main2Activity extends AppCompatActivity
             request.setParameters(parameters);
             request.executeAsync();
             btnLoginButton.setVisibility(View.INVISIBLE);
+
         }
         btnLoginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday"));
         btnLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
@@ -150,6 +163,7 @@ public class Main2Activity extends AppCompatActivity
                             Picasso.get().load(profilePicUrl).into(imvUser);
                             txtUser.setText(name);
                             ID_USER = id;
+                            getLichSuDoc(ID_USER);
                             //ID_USER = Integer.parseInt(id);
                             //user = new User(id,name,email);
                             //mDatabase.child("User").push().setValue(user);
@@ -164,6 +178,7 @@ public class Main2Activity extends AppCompatActivity
                 request.setParameters(parameters);
                 request.executeAsync();
                 btnLoginButton.setVisibility(View.INVISIBLE);
+
             }
 
             @Override
@@ -179,6 +194,66 @@ public class Main2Activity extends AppCompatActivity
 
 
     }
+
+    private void getLichSuDoc(String ID_USER) {
+
+        mDatabase.child("TinDaLuu").child(ID_USER).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                TinDaLuu tinDaLuu = dataSnapshot.getValue(TinDaLuu.class);
+                listTinDaLuu.add(tinDaLuu);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        mDatabase.child("DocGanDay").child(ID_USER).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                DocGanDay docGanDay = dataSnapshot.getValue(DocGanDay.class);
+                listDocGanDay.add(docGanDay);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -269,7 +344,9 @@ public class Main2Activity extends AppCompatActivity
             // startActivity(new Intent(MainActivity2.this, SettingsActivity2.class));
         }
         if (id == R.id.nav_history_new_save) {
-            startActivity(new Intent(Main2Activity.this, LichSuDocActivity.class));
+            Intent intent = new Intent(Main2Activity.this, LichSuDocActivity.class);
+            intent.putExtra("ID_USER",ID_USER);
+            startActivity(intent);
         }
         if (id == R.id.nav_logout) {
             LoginManager.getInstance().logOut();
@@ -277,6 +354,10 @@ public class Main2Activity extends AppCompatActivity
             imvUser.setImageResource(R.drawable.guest);
             txtUser.setText("Khách");
             // đăng xuất fb
+        }
+        if (id==R.id.nav_admin)
+        {
+            startActivity(new Intent(Main2Activity.this, AdminAtivity.class));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
