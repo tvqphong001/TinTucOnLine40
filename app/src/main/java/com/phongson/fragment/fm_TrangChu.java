@@ -63,6 +63,7 @@ public class fm_TrangChu extends Fragment {
                 Intent intent = new Intent(getActivity(), TinActivity.class);
                 intent.putExtra("link",list.get(position).getLinkTinTuc());
                 intent.putExtra("ID_USER", Main2Activity.ID_USER);
+                intent.putExtra("TinTuc",list.get(position));
                 startActivity(intent);
             }
         });

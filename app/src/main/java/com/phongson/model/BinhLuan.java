@@ -1,7 +1,34 @@
 package com.phongson.model;
 
+import java.util.Date;
+
 public class BinhLuan {
-    private String idBinhLuan , idTin , NoiDung , NgayDang ;
+    private String idBinhLuan , idTin , NoiDung, idUser;
+    Date NgayDang;
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
+    public BinhLuan(String idBinhLuan, String idTin, String noiDung, String idUser, Date ngayDang) {
+        this.idBinhLuan = idBinhLuan;
+        this.idTin = idTin;
+        NoiDung = noiDung;
+        this.idUser = idUser;
+        NgayDang = ngayDang;
+    }
+
+    public Date getNgayDang() {
+        return NgayDang;
+    }
+
+    public void setNgayDang(Date ngayDang) {
+        NgayDang = ngayDang;
+    }
 
     public String getIdBinhLuan() {
         return idBinhLuan;
@@ -27,22 +54,10 @@ public class BinhLuan {
         NoiDung = noiDung;
     }
 
-    public String getNgayDang() {
-        return NgayDang;
-    }
 
-    public void setNgayDang(String ngayDang) {
-        NgayDang = ngayDang;
-    }
 
     public BinhLuan() {
     }
 
-    public BinhLuan(String idBinhLuan, String idTin, String noiDung, String ngayDang) {
 
-        this.idBinhLuan = idBinhLuan;
-        this.idTin = idTin;
-        NoiDung = noiDung;
-        NgayDang = ngayDang;
-    }
 }

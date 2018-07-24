@@ -1,8 +1,9 @@
 package com.phongson.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TinTuc {
+public class TinTuc implements Serializable {
     public TinTuc(String idTin, String linkTinTuc, String linkHinhAnh, String tieuDe, Date ngayDang) {
         this.idTin = idTin;
         this.linkTinTuc = linkTinTuc;

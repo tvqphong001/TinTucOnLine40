@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.phongson.R;
 import com.phongson.model.DocGanDay;
 import com.phongson.model.TinDaLuu;
+import com.phongson.model.TinTuc;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class TinActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     ShareDialog shareDialog;
+    TinTuc tinTuc;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -62,9 +64,9 @@ public class TinActivity extends AppCompatActivity {
                     }
                     return true;
                 case R.id.navigation_Comments:
-//                    Intent intent = new Intent(TinActivity.this, BinhLuanActivity.class);
-//                    intent.putExtra("linkTinTuc",webView.getUrl());
-//                    startActivity(intent);
+                    Intent intent = new Intent(TinActivity.this, BinhLuanActivity.class);
+                    intent.putExtra("ID_TinTuc",tinTuc.getIdTin());
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_Share:
                     shareFaceBook();
@@ -110,7 +112,7 @@ public class TinActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tin);
         Intent intent1 = getIntent();
         ID_USER=intent1.getStringExtra("ID_USER");
-
+        tinTuc = (TinTuc) intent1.getSerializableExtra("TinTuc");
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
@@ -130,18 +132,19 @@ public class TinActivity extends AppCompatActivity {
 
 
         // Luu Tin doc gan day
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (kiemTraTrungDocGanDay(webView.getUrl())==false) {
-                    String id = mDatabase.push().getKey();
-                    DocGanDay docGanDay = new DocGanDay(id,webView.getUrl(),"",webView.getTitle(),null);
-                    Main2Activity.listDocGanDay.add(docGanDay);
-                    mDatabase.child("DocGanDay").child(ID_USER).child(id).setValue(docGanDay);
+        if (AccessToken.getCurrentAccessToken()!=null) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (kiemTraTrungDocGanDay(webView.getUrl()) == false) {
+                        String id = mDatabase.push().getKey();
+                        DocGanDay docGanDay = new DocGanDay(id, webView.getUrl(), "", webView.getTitle(), null);
+                        Main2Activity.listDocGanDay.add(docGanDay);
+                        mDatabase.child("DocGanDay").child(ID_USER).child(id).setValue(docGanDay);
+                    }
                 }
-            }
-        },4000);
-
+            }, 4000);
+        }
         //new Web VewClient
         webView.setWebViewClient(new WebViewClient());
     }
