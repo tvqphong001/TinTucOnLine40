@@ -3,7 +3,8 @@
     package="com.phongson">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -33,6 +34,14 @@
         <activity android:name=".activity.TinActivity" />
         <activity android:name=".activity.LichSuDocActivity" />
         <activity android:name=".activity.BinhLuanActivity"></activity>
+
+        <receiver
+            android:name="com.phongson.util.NetworkStateChangeReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
