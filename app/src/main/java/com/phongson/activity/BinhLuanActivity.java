@@ -1,11 +1,14 @@
 package com.phongson.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -32,6 +35,7 @@ public class BinhLuanActivity extends AppCompatActivity {
 
     EditText edtBinhLuan;
     ImageButton btnBinhLuan;
+    Button btnXoa, btnSua , btnThoat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +64,46 @@ public class BinhLuanActivity extends AppCompatActivity {
                     BinhLuan binhLuan = new BinhLuan(id,ID_TinTuc,edtBinhLuan.getText().toString(),Main2Activity.ID_USER,null);
                     MainActivity.mDatabase.child("BinhLuan").child(ID_TinTuc).child(id).setValue(binhLuan);
                     hienthi();
+                    edtBinhLuan.setText("");
                 }else {
                     Toast.makeText(BinhLuanActivity.this, "Ban Chua Dang Nhap", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final Dialog dialog = new Dialog(BinhLuanActivity.this);
+                dialog.setContentView(R.layout.dialog_binh_luan);
+                btnXoa = dialog.findViewById(R.id.btnXoa);
+                btnSua = dialog.findViewById(R.id.btnSua);
+                btnThoat = dialog.findViewById(R.id.btnThoat);
+
+                btnXoa.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity.mDatabase.child("BinhLuan").child(ID_TinTuc).child(listBinhLuan.get(position).getIdBinhLuan()).removeValue();
+                        listBinhLuan.remove(position);
+                        adapter =  new BinhLuanAdapter(BinhLuanActivity.this,R.layout.item_binhluan,listBinhLuan);
+                        listView.setAdapter(adapter);
+                        dialog.cancel();
+                    }
+                });
+                btnThoat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+                btnSua.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                dialog.show();
+                return false;
             }
         });
     }
@@ -90,7 +130,14 @@ public class BinhLuanActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                BinhLuan binhLuan = dataSnapshot.getValue(BinhLuan.class);
+                if (tim(binhLuan.getIdBinhLuan())!=-1)
+                {
+                    int vitri = tim(binhLuan.getIdBinhLuan());
+                    listBinhLuan.remove(vitri);
+                }
+                adapter = new BinhLuanAdapter(BinhLuanActivity.this,R.layout.item_binhluan,listBinhLuan);
+                listView.setAdapter(adapter);
             }
 
             @Override
@@ -110,5 +157,14 @@ public class BinhLuanActivity extends AppCompatActivity {
         listView = findViewById(R.id.listview);
         btnBinhLuan = findViewById(R.id.btnBinhLuan);
         edtBinhLuan = findViewById(R.id.edtBinhLuan);
+    }
+    private  int tim(String id)
+    {
+        for (int i=0;i<listBinhLuan.size();i++)
+        {
+            if (id.equals(listBinhLuan.get(i).getIdBinhLuan()))
+                return i;
+        }
+        return  -1;
     }
 }
