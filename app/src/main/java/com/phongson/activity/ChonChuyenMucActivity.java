@@ -26,7 +26,6 @@ public class ChonChuyenMucActivity extends AppCompatActivity {
     public static ArrayList<Integer> ViTri = new ArrayList<>();
     ListView listView;
     ChonChuyenMucAdapter adapter;
-    public static ChuyenMuc TrangChu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +36,6 @@ public class ChonChuyenMucActivity extends AppCompatActivity {
         }
         addControl();
         addEvents();
-
     }
 
     @Override

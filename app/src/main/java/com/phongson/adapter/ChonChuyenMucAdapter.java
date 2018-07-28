@@ -47,6 +47,38 @@ public class ChonChuyenMucAdapter extends ArrayAdapter {
                 view.setBackgroundColor(Color.GRAY);
             }
         }
+        if (chuyenMuc.getTenChuyenMuc().equals("Thời Sự"))
+        {
+            imageView.setImageResource(R.drawable.tintuc);
+        }
+        if (chuyenMuc.getTenChuyenMuc().equals("Giải Trí"))
+        {
+            imageView.setImageResource(R.drawable.giaitri);
+        }
+        if (chuyenMuc.getTenChuyenMuc().equals("Giáo Dục"))
+        {
+            imageView.setImageResource(R.drawable.tinhduc);
+        }
+        if (chuyenMuc.getTenChuyenMuc().equals("Thể Thao"))
+        {
+            imageView.setImageResource(R.drawable.thethao);
+        }
+        if (chuyenMuc.getTenChuyenMuc().equals("Công Nghệ"))
+        {
+            imageView.setImageResource(R.drawable.congnghe);
+        }
+        if (chuyenMuc.getTenChuyenMuc().equals("Video"))
+        {
+            imageView.setImageResource(R.drawable.videocm);
+        }
+        if (chuyenMuc.getTenChuyenMuc().equals("Sức Khỏe"))
+        {
+            imageView.setImageResource(R.drawable.suckhoe);
+        }
+
+
+
         return view;
+
     }
 }

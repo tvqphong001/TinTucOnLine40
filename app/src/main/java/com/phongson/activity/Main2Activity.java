@@ -72,14 +72,6 @@ public class Main2Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -153,20 +145,22 @@ public class Main2Activity extends AppCompatActivity
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        //Log.d("Json", response.getJSONObject().toString());
-                        //User user = null;
+                        User user = null;
                         try {
                             String name = object.getString("name");
                             String id = object.getString("id");
-                            //String email = object.getString("email");
+                            String email = object.getString("email");
                             String profilePicUrl = "https://graph.facebook.com/" + id + "/picture?type=large";
                             Picasso.get().load(profilePicUrl).into(imvUser);
                             txtUser.setText(name);
                             ID_USER = id;
                             getLichSuDoc(ID_USER);
-                            //ID_USER = Integer.parseInt(id);
-                            //user = new User(id,name,email);
-                            //mDatabase.child("User").push().setValue(user);
+                            user = new User(id,name,email);
+                            if (kiemtraUserTrung(id)==false) {
+                                mDatabase.child("User").child(id).setValue(user);
+                                MainActivity.listUser.add(user);
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -195,6 +189,15 @@ public class Main2Activity extends AppCompatActivity
 
     }
 
+    private boolean kiemtraUserTrung(String id) {
+        for (int i=0; i<MainActivity.listUser.size();i++)
+        {
+            if (id.equals(MainActivity.listUser.get(i).getIdUser()))
+                return true;
+        }
+        return false;
+    }
+
     private void getLichSuDoc(String ID_USER) {
 
         mDatabase.child("TinDaLuu").child(ID_USER).addChildEventListener(new ChildEventListener() {
@@ -206,12 +209,22 @@ public class Main2Activity extends AppCompatActivity
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                TinDaLuu tinDaLuu = dataSnapshot.getValue(TinDaLuu.class);
+                int vitri = timTinDaLuu(tinDaLuu.getIdTin());
+                if (vitri!=-1)
+                {
+                    listTinDaLuu.set(vitri,tinDaLuu);
+                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                TinDaLuu tinDaLuu = dataSnapshot.getValue(TinDaLuu.class);
+                int vitri = timTinDaLuu(tinDaLuu.getIdTin());
+                if (vitri!=-1)
+                {
+                    listTinDaLuu.remove(vitri);
+                }
             }
 
             @Override
@@ -233,11 +246,22 @@ public class Main2Activity extends AppCompatActivity
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                DocGanDay docGanDay = dataSnapshot.getValue(DocGanDay.class);
+                int vitri = timDocGanDay(docGanDay.getIdTin());
+                if (vitri!=-1)
+                {
+                    listDocGanDay.set(vitri,docGanDay);
+                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                DocGanDay docGanDay = dataSnapshot.getValue(DocGanDay.class);
+                int vitri = timDocGanDay(docGanDay.getIdTin());
+                if (vitri!=-1)
+                {
+                    listDocGanDay.remove(vitri);
+                }
 
             }
 
@@ -253,7 +277,22 @@ public class Main2Activity extends AppCompatActivity
         });
 
     }
-
+    private int timDocGanDay(String id){
+        for (int i=0;i<listDocGanDay.size();i++)
+        {
+            if (id.equals(listDocGanDay.get(i).getIdTin()))
+                return i;
+        }
+        return -1;
+    }
+    private int timTinDaLuu(String id){
+        for (int i=0;i<listTinDaLuu.size();i++)
+        {
+            if (id.equals(listTinDaLuu.get(i).getIdTin()))
+                return i;
+        }
+        return -1;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -311,9 +350,9 @@ public class Main2Activity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
+            startActivity(new Intent(Main2Activity.this,SearchActivity.class));
             return true;
         }
 
@@ -363,4 +402,5 @@ public class Main2Activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

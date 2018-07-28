@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.phongson.R;
+import com.phongson.activity.MainActivity;
 import com.phongson.model.BinhLuan;
 import com.squareup.picasso.Picasso;
 
@@ -45,7 +46,15 @@ public class BinhLuanAdapter extends ArrayAdapter<BinhLuan> {
             String profilePicUrl = "https://graph.facebook.com/" + binhLuan.getIdUser() + "/picture?type=large";
             Picasso.get().load(profilePicUrl).into(imvNguoiBinhLuan);
         }
-        txtNguoiBinhLuan.setText("Nguoi Binh Luan");
+        for (int i=0; i< MainActivity.listUser.size();i++)
+        {
+            if (binhLuan.getIdUser().equals(MainActivity.listUser.get(i).getIdUser()))
+            {
+                txtNguoiBinhLuan.setText(MainActivity.listUser.get(i).getTenNguoiDung());
+                break;
+            }
+        }
+
         txtNoiDungBinhLuan.setText(binhLuan.getNoiDung());
         return view;
     }

@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.facebook.AccessToken;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.phongson.R;
+import com.phongson.activity.Main2Activity;
 import com.phongson.activity.MainActivity;
+import com.phongson.activity.TinActivity;
 import com.phongson.adapter.LichSuDocAdapter;
 import com.phongson.model.TinDaLuu;
 
@@ -41,9 +44,36 @@ public class his_fm_TinDaLuu extends Fragment {
         Intent intent1 = getActivity().getIntent();
         ID_USER=intent1.getStringExtra("ID_USER");
         addControls();
-        getDada();
+        if (AccessToken.getCurrentAccessToken()!=null) {
+            getDada();
+        }
+        addEvents();
 
     }
+
+    private void addEvents() {
+        lvTinDaLuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), TinActivity.class);
+                intent.putExtra("link",listTinDaLuu.get(position).getLinkTinTuc());
+                intent.putExtra("ID_USER", Main2Activity.ID_USER);
+                intent.putExtra("TinTuc",listTinDaLuu.get(position));
+                intent.putExtra("LichSuDoc", 1);
+                intent.putExtra("ID_TinDaLuu",listTinDaLuu.get(position).getIdTin());
+                startActivity(intent);
+            }
+        });
+        lvTinDaLuu.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity.mDatabase.child("TinDaLuu").child(ID_USER).child(listTinDaLuu.get(position).getIdTin()).removeValue();
+                Main2Activity.listTinDaLuu.remove(position);
+                return false;
+            }
+        });
+    }
+
     private void getDada() {
         MainActivity.mDatabase.child("TinDaLuu").child(ID_USER).addChildEventListener(new ChildEventListener() {
             @Override

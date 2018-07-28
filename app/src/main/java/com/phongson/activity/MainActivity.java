@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,6 +23,7 @@ import com.phongson.model.ChuyenMuc;
 import com.phongson.model.LinkTinTuc;
 import com.phongson.model.NguonTinTuc;
 import com.phongson.model.TinDaLuu;
+import com.phongson.model.User;
 import com.phongson.util.NetworkStateChangeReceiver;
 
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     public static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     public static ArrayList<NguonTinTuc> listNgonTinTuc;
     public static ArrayList<LinkTinTuc> listLinkTinTuc;
-    public static int UngDungDangHoatDong = 1;
+    public static ArrayList<User> listUser;
+    public static AccessToken accessToken = AccessToken.getCurrentAccessToken();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             getDataChuyenMuc();
             getdataNguonTinTuc();
             getdataLinkTinTuc();
+            getDataUser();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -53,6 +57,37 @@ public class MainActivity extends AppCompatActivity {
         }
         else Toast.makeText(this, "Vui Long Kiem Tra Internet!", Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void getDataUser() {
+        listUser = new ArrayList<>();
+        mDatabase.child("User").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                User user= dataSnapshot.getValue(User.class);
+                listUser.add(user);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private boolean checkNetwork() {

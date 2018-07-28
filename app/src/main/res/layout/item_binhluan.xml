@@ -2,25 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_margin="10dp">
-
-        <ImageView
-            android:id="@+id/imvNguoiBinhLuan"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/guest" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/imvNguoiBinhLuan"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/guest" />
             <TextView
                 android:id="@+id/txtTenNguoiBinhLuan"
                 android:layout_width="wrap_content"
@@ -30,12 +30,17 @@
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtNoiDungBinhLuan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Noi Dung binh luan"
-                android:textColor="#000000" />
+
         </LinearLayout>
+        <TextView
+            android:id="@+id/txtNoiDungBinhLuan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Noi Dung binh luan"
+            android:textColor="#000000" />
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:background="#b6b2b2"
+        android:layout_height="1dp" />
 </LinearLayout>

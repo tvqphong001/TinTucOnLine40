@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -41,13 +43,26 @@ public class BinhLuanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_binh_luan);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         ID_TinTuc = TinActivity.tinTuc.getIdTin();
 
         addConTrols();
         getDataBinhLuan();
         addEvents();
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     private void addEvents() {
         btnBinhLuan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +88,7 @@ public class BinhLuanActivity extends AppCompatActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                if(AccessToken.getCurrentAccessToken()!=null)
+                if(AccessToken.getCurrentAccessToken()!=null && listBinhLuan.get(position).getIdUser().equals(Main2Activity.ID_USER))
                 {
                 final Dialog dialog = new Dialog(BinhLuanActivity.this);
                 dialog.setContentView(R.layout.dialog_binh_luan);

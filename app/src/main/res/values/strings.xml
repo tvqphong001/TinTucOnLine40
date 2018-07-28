@@ -1,4 +1,16 @@
 <resources>
+    <array name="listSearch">
+        <item>Quyen Phong</item>
+        <item>Hoang Son</item>
+        <item>Chung Tu</item>
+        <item>Thanh Thai</item>
+        <item>Kim Ngan</item>
+        <item>Duy Phuc</item>
+        <item>Hong Hue</item>
+        <item>Gia Han</item>
+        <item>Van Sinh</item>
+        <item>Minh Khoa</item>
+    </array>
     <string name="app_name">TinTucOnLine 4.0</string>
     <string name="facebook_app_id">485837115176956</string>
     <string name="fb_login_protocol_scheme">fb485837115176956</string>

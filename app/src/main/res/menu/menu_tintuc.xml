@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/navigation_Save"
-        android:icon="@drawable/ic_drop_down_24dp"
+        android:icon="@drawable/ic_archive_black_24dp"
         android:title="Luu tin " />
 
     <item

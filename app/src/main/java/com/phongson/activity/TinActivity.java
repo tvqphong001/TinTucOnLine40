@@ -27,7 +27,7 @@ import com.phongson.model.DocGanDay;
 import com.phongson.model.TinDaLuu;
 import com.phongson.model.TinTuc;
 
-import java.util.ArrayList;
+import org.w3c.dom.NodeList;
 
 
 public class TinActivity extends AppCompatActivity {
@@ -37,35 +37,41 @@ public class TinActivity extends AppCompatActivity {
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     ShareDialog shareDialog;
     public static TinTuc tinTuc;
+    int TrangThaiLuu = 0;
+    String ID_TinVuaLuu ="abc";
+    String ID_LichSuDoc = "";
+    BottomNavigationView navigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
             switch (item.getItemId()) {
                 case R.id.navigation_Save:
-                    if (AccessToken.getCurrentAccessToken()!=null){
+                    if (AccessToken.getCurrentAccessToken() != null) {
 
-                        if (kiemTraTrung(webView.getUrl())==false)
-                        {
-                            String id = mDatabase.push().getKey();
-                            TinDaLuu tinDaLuu = new TinDaLuu(id,webView.getUrl(),"",webView.getTitle(),"","",null);
-                            mDatabase.child("TinDaLuu").child(ID_USER).child(id).setValue(tinDaLuu);
-                            Main2Activity.listTinDaLuu.add(tinDaLuu);
-                            Toast.makeText(TinActivity.this, "Luu Thanh Cong", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(TinActivity.this, "Tin Da Ton Tai", Toast.LENGTH_SHORT).show();
-                        }
+                            if (kiemTraTrung(webView.getUrl()) == -1) {
+                                String id = mDatabase.push().getKey();
+                                TinDaLuu tinDaLuu = new TinDaLuu(id, webView.getUrl(), "", webView.getTitle(), "", "", null);
+                                mDatabase.child("TinDaLuu").child(ID_USER).child(id).setValue(tinDaLuu);
+                                ID_TinVuaLuu = id;
+                                Toast.makeText(TinActivity.this, "Luu Thanh Cong", Toast.LENGTH_SHORT).show();
+                                navigation.getMenu().getItem(0).setIcon(R.drawable.ic_archive_wht_24dp);
+                            } else {
+                                int vitri = kiemTraTrung(webView.getUrl());
+                                mDatabase.child("TinDaLuu").child(ID_USER).child(Main2Activity.listTinDaLuu.get(vitri).getIdTin()).removeValue();
+                                Toast.makeText(TinActivity.this, "Đã Xóa Tin", Toast.LENGTH_SHORT).show();
+                                navigation.getMenu().getItem(0).setIcon(R.drawable.ic_archive_black_24dp);
+                            }
 
-                    }
-                    else {
+                    } else {
                         Toast.makeText(TinActivity.this, "No Login!", Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 case R.id.navigation_Comments:
                     Intent intent = new Intent(TinActivity.this, BinhLuanActivity.class);
-                    intent.putExtra("ID_TinTuc",tinTuc.getIdTin());
+                    intent.putExtra("ID_TinTuc", tinTuc.getIdTin());
                     startActivity(intent);
                     return true;
                 case R.id.navigation_Share:
@@ -76,7 +82,7 @@ public class TinActivity extends AppCompatActivity {
         }
     };
 
-//    private void XoaTin(String url)
+    //    private void XoaTin(String url)
 //    {
 //        ArrayList<TinDaLuu> listTinDaLuu =MainActivity.listTinDaLuu;
 //        for (int i =0;i<listTinDaLuu.size();i++)
@@ -89,17 +95,24 @@ public class TinActivity extends AppCompatActivity {
 //            }
 //        }
 //    }
-    private boolean kiemTraTrung(String url) {
-        for (int i =0;i<Main2Activity.listTinDaLuu.size();i++)
-        {
+    private int kiemTraTrung(String url) {
+        for (int i = 0; i < Main2Activity.listTinDaLuu.size(); i++) {
             if (url.equals(Main2Activity.listTinDaLuu.get(i).getLinkTinTuc()))
-                return true;
+                return i;
         }
-        return false;
+        return -1;
+    }
+
+    private int timTin(String id)
+    {
+        for (int i = 0; i < Main2Activity.listTinDaLuu.size(); i++) {
+            if (id.equals(Main2Activity.listTinDaLuu.get(i).getIdTin()))
+                return i;
+        }
+        return -1;
     }
     private boolean kiemTraTrungDocGanDay(String url) {
-        for (int i =0;i<Main2Activity.listDocGanDay.size();i++)
-        {
+        for (int i = 0; i < Main2Activity.listDocGanDay.size(); i++) {
             if (url.equals(Main2Activity.listDocGanDay.get(i).getLinkTinTuc()))
                 return true;
         }
@@ -110,19 +123,22 @@ public class TinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tin);
-        Intent intent1 = getIntent();
-        ID_USER=intent1.getStringExtra("ID_USER");
-        tinTuc = (TinTuc) intent1.getSerializableExtra("TinTuc");
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setTitle(getResources().getString(R.string.app_name));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
         Intent intent = getIntent();
         String link = intent.getStringExtra("link");
+        ID_USER = intent.getStringExtra("ID_USER");
+        tinTuc = (TinTuc) intent.getSerializableExtra("TinTuc");
+        TrangThaiLuu = intent.getIntExtra("LichSuDoc", 0);
+        ID_LichSuDoc = intent.getStringExtra("ID_TinDaLuu");
 
 
         // webView
@@ -130,13 +146,21 @@ public class TinActivity extends AppCompatActivity {
         settingWebView(true);
         webView.loadUrl(link);
 
+        if (kiemTraTrung(webView.getUrl())!=-1)
+        {
+            navigation.getMenu().getItem(0).setIcon(R.drawable.ic_archive_wht_24dp);
+        }
 
         // Luu Tin doc gan day
-        if (AccessToken.getCurrentAccessToken()!=null) {
+        if (AccessToken.getCurrentAccessToken() != null) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (kiemTraTrungDocGanDay(webView.getUrl()) == false) {
+                        if(Main2Activity.listDocGanDay.size()>20)
+                        {
+                            Main2Activity.listDocGanDay.remove(0);
+                        }
                         String id = mDatabase.push().getKey();
                         DocGanDay docGanDay = new DocGanDay(id, webView.getUrl(), "", webView.getTitle(), null);
                         Main2Activity.listDocGanDay.add(docGanDay);
@@ -187,6 +211,7 @@ public class TinActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
     private void settingWebView(boolean trangthai) {
         webView.getSettings().setJavaScriptEnabled(trangthai);
         // webView.getSettings().setPluginState(WebSettings.PluginState.ON);
