@@ -145,7 +145,7 @@ public class Main2Activity extends AppCompatActivity
             btnLoginButton.setVisibility(View.INVISIBLE);
 
         }
-        btnLoginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday"));
+        btnLoginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         btnLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {

@@ -41,8 +41,7 @@ public class BinhLuanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_binh_luan);
-        Intent intent = getIntent();
-        ID_TinTuc = intent.getStringExtra("ID_TinTuc");
+        ID_TinTuc = TinActivity.tinTuc.getIdTin();
 
         addConTrols();
         getDataBinhLuan();
@@ -74,6 +73,8 @@ public class BinhLuanActivity extends AppCompatActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                if(AccessToken.getCurrentAccessToken()!=null)
+                {
                 final Dialog dialog = new Dialog(BinhLuanActivity.this);
                 dialog.setContentView(R.layout.dialog_binh_luan);
                 btnXoa = dialog.findViewById(R.id.btnXoa);
@@ -85,8 +86,7 @@ public class BinhLuanActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         MainActivity.mDatabase.child("BinhLuan").child(ID_TinTuc).child(listBinhLuan.get(position).getIdBinhLuan()).removeValue();
                         listBinhLuan.remove(position);
-                        adapter =  new BinhLuanAdapter(BinhLuanActivity.this,R.layout.item_binhluan,listBinhLuan);
-                        listView.setAdapter(adapter);
+                       hienthi();
                         dialog.cancel();
                     }
                 });
@@ -99,10 +99,13 @@ public class BinhLuanActivity extends AppCompatActivity {
                 btnSua.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Intent intent = new Intent(BinhLuanActivity.this , CapNhatBinhLuanActivity.class);
+                        intent.putExtra("BinhLuan",listBinhLuan.get(position));
+                        startActivity(intent);
                     }
                 });
                 dialog.show();
+                }
                 return false;
             }
         });
@@ -119,13 +122,18 @@ public class BinhLuanActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 BinhLuan binhLuan = dataSnapshot.getValue(BinhLuan.class);
                 listBinhLuan.add(binhLuan);
-                adapter = new BinhLuanAdapter(BinhLuanActivity.this,R.layout.item_binhluan,listBinhLuan);
-                listView.setAdapter(adapter);
+                hienthi();
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                BinhLuan binhLuan = dataSnapshot.getValue(BinhLuan.class);
+                if (tim(binhLuan.getIdBinhLuan())!=-1)
+                {
+                    int vitri = tim(binhLuan.getIdBinhLuan());
+                    listBinhLuan.set(vitri,binhLuan);
+                }
+                hienthi();
             }
 
             @Override
@@ -136,8 +144,7 @@ public class BinhLuanActivity extends AppCompatActivity {
                     int vitri = tim(binhLuan.getIdBinhLuan());
                     listBinhLuan.remove(vitri);
                 }
-                adapter = new BinhLuanAdapter(BinhLuanActivity.this,R.layout.item_binhluan,listBinhLuan);
-                listView.setAdapter(adapter);
+                hienthi();
             }
 
             @Override
@@ -151,6 +158,7 @@ public class BinhLuanActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void addConTrols() {
         listBinhLuan = new ArrayList<>();

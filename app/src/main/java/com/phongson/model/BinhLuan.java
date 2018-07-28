@@ -1,8 +1,9 @@
 package com.phongson.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BinhLuan {
+public class BinhLuan implements Serializable{
     private String idBinhLuan , idTin , NoiDung, idUser;
     Date NgayDang;
 

@@ -36,7 +36,7 @@ public class TinActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     ShareDialog shareDialog;
-    TinTuc tinTuc;
+    public static TinTuc tinTuc;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -201,7 +201,7 @@ public class TinActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                settingWebView(false);
+                //settingWebView(false);
                 finish();
                 return true;
             default:
